@@ -1,0 +1,3 @@
+[submodule "dependencies/image-loader"]
+	path = dependencies/image-loader
+	url = git@github.com:rondor1/image-loader.git
