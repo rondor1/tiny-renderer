@@ -5,11 +5,17 @@ namespace tr
     class RenderPrivateImpl
     {
         public:
-        std::optional<RenderingErrorCodes> drawLine(const std::int32_t& x0, const std::int32_t& y0,
+        void drawLine(const std::int32_t& x0, const std::int32_t& y0,
                   const std::int32_t& x1, const std::int32_t& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)
         {
-            return std::nullopt;
+
+            for (float t=0.; t<1.; t+=.01)
+            {
+                int x = x0 + (x1-x0)*t;
+                int y = y0 + (y1-y0)*t;
+                image.setColor(x, y, color);
+            }
         }
     };
 
@@ -30,7 +36,7 @@ namespace tr
             return RenderingErrorCodes::IndexOutOfRange;
         }
 
-        return d_ptr->drawLine(x0, y0, x1, y1, image, color);
+        d_ptr->drawLine(x0, y0, x1, y1, image, color);
     }
 
     Renderer::~Renderer()
