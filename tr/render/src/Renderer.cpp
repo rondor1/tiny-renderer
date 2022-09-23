@@ -9,7 +9,6 @@ namespace tr
                   const std::int32_t& x1, const std::int32_t& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)
         {
-
             for (float t=0.; t<1.; t+=.01)
             {
                 int x = x0 + (x1-x0)*t;
@@ -37,10 +36,13 @@ namespace tr
         }
 
         d_ptr->drawLine(x0, y0, x1, y1, image, color);
+
+        return std::nullopt;
     }
 
     Renderer::~Renderer()
     {
 
     }
+
 } // namespace tr

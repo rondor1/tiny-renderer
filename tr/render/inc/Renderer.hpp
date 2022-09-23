@@ -8,7 +8,7 @@
 
 namespace tr
 {
-    enum class RenderingErrorCodes
+    enum class [[nodiscard]] RenderingErrorCodes
     {
         IndexOutOfRange
     };
