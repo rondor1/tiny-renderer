@@ -21,8 +21,8 @@ namespace tr
             Renderer();
             ~Renderer();
 
-            std::optional<RenderingErrorCodes> drawLine(const std::int32_t& x0, const std::int32_t& y0,
-                  const std::int32_t& x1, const std::int32_t& y1,
+            std::optional<RenderingErrorCodes> drawLine(std::int32_t&& x0, std::int32_t&& y0,
+                  std::int32_t&& x1, std::int32_t&& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color = {255,255,255,0});
 
         private:
