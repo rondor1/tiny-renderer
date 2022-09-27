@@ -1,5 +1,7 @@
 #include "Renderer.hpp"
 
+#include <tuple>
+
 namespace tr
 {
     class RenderPrivateImpl
@@ -12,8 +14,8 @@ namespace tr
             auto isLineSteep = false;
             if(isLineSteep = checkIfLineIsSteep(x0, y0, x1, y1); isLineSteep )
             {
-                std::swap(x0, x1);
-                std::swap(y0, y1);
+                std::swap(x0, y0);
+                std::swap(x1, y1);
             }
 
             if(x0 > x1)
@@ -22,36 +24,53 @@ namespace tr
                 std::swap(y0, y1);
             }
 
-            const auto dx = std::abs(x0-x1);
-            const auto dy = std::abs(y0-y1);
-            auto d = dy*2 - dx;
+            const auto differenceX = std::abs(x1 - x0);
+            auto incrementStepX = x0 < x1 ? 1 : -1;
+            const auto differenceY = -std::abs(y1 - y0);
+            auto incrementStepY = y0 < y1 ? 1 : -1;
+            auto error = differenceX + differenceY;
+
+            auto x = x0;
             auto y = y0;
 
-            for(auto x = x0; x < x1; ++x)
+
+            while(x <= x1 && y <= y1)
             {
-                if(isLineSteep)
-                {
-                    std::swap(x,y);
-                }
+                image.setColor(x, y, color);
 
-                image.setColor(x,y,color);
-
-                if(d > 0)
-                {
-                    ++y;
-                    d = d-2*dx;
-                }
-
-                d += 2*dy;
+                std::tie(x,y) = calculateNextPoint(x, y, differenceX, differenceY,
+                                                   incrementStepX, incrementStepY, error);
             }
         }
 
         private:
             bool checkIfLineIsSteep(const std::int32_t& x0, const std::int32_t& y0,
                   const std::int32_t& x1, const std::int32_t& y1)
-                  {
-                    return std::abs(x0-x1) < std::abs(y0 - y1);
-                  }
+            {
+                return std::abs(x0-x1) < std::abs(y0 - y1);
+            }
+
+            std::tuple<int, int> calculateNextPoint(std::int32_t& x,std::int32_t& y,
+                                                    const std::int32_t& differenceX, const std::int32_t& differenceY,
+                                                    std::int32_t& incrementStepX,std::int32_t& incrementStepY,
+                                                    std::int32_t& incrementalError)
+            {
+                auto doubleError = incrementalError << 1;
+
+                if(doubleError >= differenceY)
+                {
+                    incrementalError += differenceY;
+                    x += incrementStepX;
+                }
+
+                if(doubleError <= differenceX)
+                {
+                    incrementalError += differenceX;
+                    y += incrementStepY;
+                }
+
+                return {x,y};
+            }
     };
 
     Renderer::Renderer() : d_ptr{new RenderPrivateImpl}
