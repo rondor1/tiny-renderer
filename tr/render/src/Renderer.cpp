@@ -11,18 +11,6 @@ namespace tr
                   std::int32_t& x1, std::int32_t& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)
         {
-            auto isLineSteep = false;
-            if(isLineSteep = checkIfLineIsSteep(x0, y0, x1, y1); isLineSteep )
-            {
-                std::swap(x0, y0);
-                std::swap(x1, y1);
-            }
-
-            if(x0 > x1)
-            {
-                std::swap(x0, x1);
-                std::swap(y0, y1);
-            }
 
             const auto differenceX = std::abs(x1 - x0);
             auto incrementStepX = x0 < x1 ? 1 : -1;
@@ -34,22 +22,22 @@ namespace tr
             auto y = y0;
 
 
-            while(x <= x1 && y <= y1)
+            while(x != x1 && y != y1)
             {
                 image.setColor(x, y, color);
 
                 std::tie(x,y) = calculateNextPoint(x, y, differenceX, differenceY,
                                                    incrementStepX, incrementStepY, error);
+
+                if(x > x1 &&
+                   y > y1)
+                {
+                    break;
+                }
             }
         }
 
         private:
-            bool checkIfLineIsSteep(const std::int32_t& x0, const std::int32_t& y0,
-                  const std::int32_t& x1, const std::int32_t& y1)
-            {
-                return std::abs(x0-x1) < std::abs(y0 - y1);
-            }
-
             std::tuple<int, int> calculateNextPoint(std::int32_t& x,std::int32_t& y,
                                                     const std::int32_t& differenceX, const std::int32_t& differenceY,
                                                     std::int32_t& incrementStepX,std::int32_t& incrementStepY,

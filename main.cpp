@@ -54,6 +54,11 @@ int main(int argc, char** argv)
         utils::logger::errorMessage("Invalid points for line provided!");
     }
 
+    if (auto result = render->drawLine(400, 100, 100, 500, *image, {0,0,255,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
+        utils::logger::setup("error");
+        utils::logger::errorMessage("Invalid points for line provided!");
+    }
+
     utils::logger::infoMessage("Rendering finished... Starting with image saving...");
 
     auto result = storeImage->storeImage(argv[1], *image);
