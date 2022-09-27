@@ -1,4 +1,4 @@
-set(sources src/Point.cpp)
+set(sources src/point/Point.cpp)
 set(headers inc/point/Point.hpp)
 
 add_library(mesh ${sources} ${headers})
