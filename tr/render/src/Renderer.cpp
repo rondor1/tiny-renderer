@@ -1,21 +1,64 @@
 #include "Renderer.hpp"
 
+#include <tuple>
+
 namespace tr
 {
     class RenderPrivateImpl
     {
         public:
-        void drawLine(const std::int32_t& x0, const std::int32_t& y0,
-                  const std::int32_t& x1, const std::int32_t& y1,
+        void drawLine(std::int32_t& x0, std::int32_t& y0,
+                  std::int32_t& x1, std::int32_t& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)
         {
-            for (float t=0.; t<1.; t+=.01)
+
+            const auto differenceX = std::abs(x1 - x0);
+            auto incrementStepX = x0 < x1 ? 1 : -1;
+            const auto differenceY = -std::abs(y1 - y0);
+            auto incrementStepY = y0 < y1 ? 1 : -1;
+            auto error = differenceX + differenceY;
+
+            auto x = x0;
+            auto y = y0;
+
+
+            while(x != x1 && y != y1)
             {
-                int x = x0 + (x1-x0)*t;
-                int y = y0 + (y1-y0)*t;
                 image.setColor(x, y, color);
+
+                std::tie(x,y) = calculateNextPoint(x, y, differenceX, differenceY,
+                                                   incrementStepX, incrementStepY, error);
+
+                if(x > x1 &&
+                   y > y1)
+                {
+                    break;
+                }
             }
         }
+
+        private:
+            std::tuple<int, int> calculateNextPoint(std::int32_t& x,std::int32_t& y,
+                                                    const std::int32_t& differenceX, const std::int32_t& differenceY,
+                                                    std::int32_t& incrementStepX,std::int32_t& incrementStepY,
+                                                    std::int32_t& incrementalError)
+            {
+                auto doubleError = incrementalError << 1;
+
+                if(doubleError >= differenceY)
+                {
+                    incrementalError += differenceY;
+                    x += incrementStepX;
+                }
+
+                if(doubleError <= differenceX)
+                {
+                    incrementalError += differenceX;
+                    y += incrementStepY;
+                }
+
+                return {x,y};
+            }
     };
 
     Renderer::Renderer() : d_ptr{new RenderPrivateImpl}
@@ -23,8 +66,8 @@ namespace tr
 
     }
 
-    std::optional<RenderingErrorCodes> Renderer::drawLine(const std::int32_t& x0, const std::int32_t& y0,
-                  const std::int32_t& x1, const std::int32_t& y1,
+    std::optional<RenderingErrorCodes> Renderer::drawLine(std::int32_t&& x0, std::int32_t&& y0,
+                  std::int32_t&& x1, std::int32_t&& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)
     {
         if(x0 < 0 || x0 > image.width() ||
