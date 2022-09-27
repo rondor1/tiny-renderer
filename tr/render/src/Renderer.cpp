@@ -66,6 +66,22 @@ namespace tr
 
     }
 
+    std::optional<RenderingErrorCodes> Renderer::drawLine(Point2Di& p0, Point2Di& p1,
+                  imageloader::TGAImage& image, const imageloader::TGAColor& color)
+    {
+        if(p0.x < 0 || p0.x > image.width() ||
+           p0.y < 0 || p0.y > image.height() ||
+           p1.x < 0 || p1.x > image.width() ||
+           p1.y < 0 || p1.y > image.height())
+        {
+            return RenderingErrorCodes::IndexOutOfRange;
+        }
+
+        d_ptr->drawLine(p0.x, p0.y, p1.x, p1.y, image, color);
+
+        return std::nullopt;
+    }
+
     std::optional<RenderingErrorCodes> Renderer::drawLine(std::int32_t&& x0, std::int32_t&& y0,
                   std::int32_t&& x1, std::int32_t&& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)

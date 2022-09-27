@@ -1,10 +1,10 @@
 #include "Logger.hpp"
 #include "Renderer.hpp"
 #include "tgaImage/TGAImageLoad.hpp"
+#include "point/Point.hpp"
 
 int main(int argc, char** argv)
 {
-
     utils::logger::setup("info");
     utils::logger::infoMessage("Starting renderer...");
 
@@ -58,6 +58,15 @@ int main(int argc, char** argv)
         utils::logger::setup("error");
         utils::logger::errorMessage("Invalid points for line provided!");
     }
+
+    tr::Point2Di p0{100, 100};
+    tr::Point2Di p1{500, 500};
+
+    if(auto result = render->drawLine(p0, p1, *image, {255,128,128,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
+        utils::logger::setup("error");
+        utils::logger::errorMessage("Invalid points for line provided!");
+    }
+
 
     utils::logger::infoMessage("Rendering finished... Starting with image saving...");
 

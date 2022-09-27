@@ -5,6 +5,7 @@
 #include <optional>
 
 #include "tgaImage/TGAImage.hpp"
+#include "point/Point.hpp"
 
 namespace tr
 {
@@ -20,6 +21,9 @@ namespace tr
         public:
             Renderer();
             ~Renderer();
+
+            std::optional<RenderingErrorCodes> drawLine(Point2Di& p0, Point2Di& p1,
+                  imageloader::TGAImage& image, const imageloader::TGAColor& color = {255,255,255,0});
 
             std::optional<RenderingErrorCodes> drawLine(std::int32_t&& x0, std::int32_t&& y0,
                   std::int32_t&& x1, std::int32_t&& y1,
