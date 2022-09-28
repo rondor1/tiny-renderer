@@ -22,18 +22,12 @@ namespace tr
             auto y = y0;
 
 
-            while(x != x1 && y != y1)
+            while(x != x1 || y != y1)
             {
                 image.setColor(x, y, color);
 
                 std::tie(x,y) = calculateNextPoint(x, y, differenceX, differenceY,
                                                    incrementStepX, incrementStepY, error);
-
-                if(x > x1 &&
-                   y > y1)
-                {
-                    break;
-                }
             }
         }
 
