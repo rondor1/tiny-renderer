@@ -49,7 +49,7 @@ int main(int argc, char** argv)
         utils::logger::errorMessage("Invalid points for line provided!");
     }
 
-    if (auto result = render->drawLine(200, 100, 100, 500, *image, {0,255,0,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
+    if (auto result = render->drawLine(500, 100, 500, 500, *image, {0,255,0,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
         utils::logger::setup("error");
         utils::logger::errorMessage("Invalid points for line provided!");
     }
