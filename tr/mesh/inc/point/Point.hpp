@@ -19,6 +19,7 @@ namespace tr
 
         Point2D<T>() : x(0), y(0) {}
         Point2D<T>(T x0, T y0) : x(x0), y(y0) {}
+
         inline Point2D<T> operator+(const Point2D<T>& point) const
         {
             return {this.x + point.x, this.y + point.y};

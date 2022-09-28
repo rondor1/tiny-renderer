@@ -39,34 +39,14 @@ int main(int argc, char** argv)
 
     utils::logger::infoMessage("Setup done! Starting rendering...");
 
-    if (auto result = render->drawLine(100, 100, 500, 500, *image); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
+    tr::Point2Di p0{300, 200};
+    tr::Point2Di p1{500, 200};
+    tr::Point2Di p2{500, 230};
+
+    if(auto result = render->drawTriangle(p0, p1, p2,*image); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
         utils::logger::setup("error");
         utils::logger::errorMessage("Invalid points for line provided!");
     }
-
-    if (auto result = render->drawLine(200, 100, 600, 500, *image, {255,0,0,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
-        utils::logger::setup("error");
-        utils::logger::errorMessage("Invalid points for line provided!");
-    }
-
-    if (auto result = render->drawLine(500, 100, 500, 500, *image, {0,255,0,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
-        utils::logger::setup("error");
-        utils::logger::errorMessage("Invalid points for line provided!");
-    }
-
-    if (auto result = render->drawLine(400, 100, 100, 500, *image, {0,0,255,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
-        utils::logger::setup("error");
-        utils::logger::errorMessage("Invalid points for line provided!");
-    }
-
-    tr::Point2Di p0{100, 100};
-    tr::Point2Di p1{500, 500};
-
-    if(auto result = render->drawLine(p0, p1, *image, {255,128,128,0}); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
-        utils::logger::setup("error");
-        utils::logger::errorMessage("Invalid points for line provided!");
-    }
-
 
     utils::logger::infoMessage("Rendering finished... Starting with image saving...");
 

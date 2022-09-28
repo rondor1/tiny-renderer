@@ -1,6 +1,9 @@
 #include "Renderer.hpp"
 
+#include <algorithm>
 #include <tuple>
+
+#include "Logger.hpp"
 
 namespace tr
 {
@@ -29,6 +32,30 @@ namespace tr
                 std::tie(x,y) = calculateNextPoint(x, y, differenceX, differenceY,
                                                    incrementStepX, incrementStepY, error);
             }
+        }
+
+        void drawTriangle(Point2Di& p0, Point2Di& p1, Point2Di& p2,
+                  imageloader::TGAImage& image, const imageloader::TGAColor& color)
+        {
+            if(p0.y > p1.y)
+            {
+                std::swap(p0.x, p1.x);
+                std::swap(p0.y, p1.y);
+            }
+            if(p0.y > p2.y)
+            {
+                std::swap(p0.x, p2.x);
+                std::swap(p0.y, p2.y);
+            }
+            if(p1.y > p2.y)
+            {
+                std::swap(p1.x, p2.x);
+                std::swap(p1.y, p2.y);
+            }
+
+            drawLine(p0.x, p0.y, p1.x, p1.y, image, color);
+            drawLine(p1.x, p1.y, p2.x, p2.y, image, color);
+            drawLine(p2.x, p2.y, p0.x, p0.y, image, color);
         }
 
         private:
@@ -89,6 +116,24 @@ namespace tr
         }
 
         d_ptr->drawLine(x0, y0, x1, y1, image, color);
+
+        return std::nullopt;
+    }
+
+    std::optional<RenderingErrorCodes> Renderer::drawTriangle(Point2Di& p0, Point2Di& p1, Point2Di& p2,
+                  imageloader::TGAImage& image, const imageloader::TGAColor& color)
+    {
+        if(p0.x < 0 || p0.x > image.width() ||
+           p0.y < 0 || p0.y > image.height() ||
+           p1.x < 0 || p1.x > image.width() ||
+           p1.y < 0 || p1.y > image.height() ||
+           p2.x < 0 || p2.x > image.width() ||
+           p2.y < 0 || p2.y > image.height())
+        {
+            return RenderingErrorCodes::IndexOutOfRange;
+        }
+
+        d_ptr->drawTriangle(p0, p1, p2, image, color);
 
         return std::nullopt;
     }

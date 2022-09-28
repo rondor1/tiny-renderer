@@ -29,6 +29,10 @@ namespace tr
                   std::int32_t&& x1, std::int32_t&& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color = {255,255,255,0});
 
+
+            std::optional<RenderingErrorCodes> drawTriangle(Point2Di& p0, Point2Di& p1, Point2Di& p2,
+                  imageloader::TGAImage& image, const imageloader::TGAColor& color = {255,255,255,0});
+
         private:
             std::unique_ptr<RenderPrivateImpl> d_ptr;
     };
