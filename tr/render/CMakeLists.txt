@@ -2,7 +2,7 @@ set(sources src/Renderer.cpp)
 set(headers inc/Renderer.hpp)
 
 add_library(renderer ${sources} ${headers})
-target_link_libraries(renderer mesh loader utils)
+target_link_libraries(renderer model loader utils)
 add_library(${PROJECT_NAME}::renderer ALIAS renderer)
 
 target_compile_features(renderer PUBLIC cxx_std_17)

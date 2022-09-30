@@ -3,10 +3,17 @@
 #include "tgaImage/TGAImageLoad.hpp"
 #include "point/Point.hpp"
 
+#include "Model.hpp"
+
 int main(int argc, char** argv)
 {
     utils::logger::setup("info");
     utils::logger::infoMessage("Starting renderer...");
+
+
+    tr::Model m;
+    m.load();
+
 
     if(argc <= 2 && argv ==nullptr)
     {
