@@ -103,8 +103,27 @@ namespace tr
         return std::nullopt;
     }
 
-    std::optional<RenderingErrorCodes> Renderer::drawLine(std::int32_t&& x0, std::int32_t&& y0,
-                  std::int32_t&& x1, std::int32_t&& y1,
+    std::optional<RenderingErrorCodes> Renderer::drawModel(const Model& model, imageloader::TGAImage& image)
+    {
+        for(auto i = 0; i < model.numberOfFaces(); ++i)
+        {
+            auto face = model.faces(i);
+            for (int j=0; j<3; j++)
+            {
+                auto v0 = model.vertex(face[j]);
+                auto v1 = model.vertex(face[(j+1)%3]);
+                int x0 = (v0.x+1.)*image.width()/2.;
+                int y0 = (v0.y+1.)*image.height()/2.;
+                int x1 = (v1.x+1.)*image.width()/2.;
+                int y1 = (v1.y+1.)*image.height()/2.;
+                drawLine(x0, y0, x1, y1, image);
+            }
+        }
+        return std::nullopt;
+    }
+
+    std::optional<RenderingErrorCodes> Renderer::drawLine(std::int32_t& x0, std::int32_t& y0,
+                  std::int32_t& x1, std::int32_t& y1,
                   imageloader::TGAImage& image, const imageloader::TGAColor& color)
     {
         if(x0 < 0 || x0 > image.width() ||

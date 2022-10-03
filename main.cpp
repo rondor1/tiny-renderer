@@ -11,9 +11,6 @@ int main(int argc, char** argv)
     utils::logger::infoMessage("Starting renderer...");
 
 
-    tr::Model m;
-    m.load();
-
 
     if(argc <= 2 && argv ==nullptr)
     {
@@ -44,27 +41,13 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    utils::logger::infoMessage("Setup done! Starting rendering...");
 
-    tr::Point2Di p0{300, 200};
-    tr::Point2Di p1{500, 200};
-    tr::Point2Di p2{500, 230};
+    tr::Model m;
+    m.load(argv[1]);
 
-    if(auto result = render->drawTriangle(p0, p1, p2,*image); result.has_value() && result.value() == tr::RenderingErrorCodes::IndexOutOfRange) {
-        utils::logger::setup("error");
-        utils::logger::errorMessage("Invalid points for line provided!");
-    }
+    render->drawModel(m, *image);
 
-    utils::logger::infoMessage("Rendering finished... Starting with image saving...");
-
-    auto result = storeImage->storeImage(argv[1], *image);
-
-    if(std::holds_alternative<imageloader::ErrorCodes>(result))
-    {
-        utils::logger::setup("error");
-        utils::logger::errorMessage("Failed to store image at:" + std::string(argv[1]));
-        return -1;
-    }
+    storeImage->storeImage(argv[2], *image);
 
     utils::logger::infoMessage("Image sucessfully stored!");
 

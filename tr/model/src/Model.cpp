@@ -1,5 +1,5 @@
 #include "Model.hpp"
-#include "point/Point.hpp"
+
 
 #include <filesystem>
 #include <fstream>
@@ -17,44 +17,46 @@ namespace tr
 
         std::optional<ErrorCodes> initModel(const std::string_view& filename)
         {
-            std::ifstream inputFile(filename.data(), std::ios::in | std::ios::binary);
+            std::ifstream inputFile(filename.data(), std::ios::in);
 
             if(!inputFile.is_open())
             {
                 return ErrorCodes::InvalidReadOperation;
             }
 
-            auto inputDataType = static_cast<char>(inputFile.get());
-
-            while(inputDataType != EOF)
+            std::string currentLine{};
+            char trash;
+            while(std::getline(inputFile, currentLine))
             {
-
-                std::string line;
-                std::array<float, 3> verts;
-                std::vector<int> f;
-
-                Point3Df pt;
-                switch (inputDataType)
+                std::istringstream lineHandler{currentLine};
+                if(currentLine.compare(0, 2, "v ") == 0)
                 {
-                    case 'v':
-                        for(auto iter = 0; iter < 3; ++iter)
-                        {
-                            inputFile >> verts[iter];
-                        }
-                        pt = {verts[0], verts[1], verts[2]};
-                        vertices.push_back(pt);
-                        break;
-                    case '#':
-                            std::getline(inputFile, line);
-                            std::cout << line;
-                        break;
-                    default:
-                        break;
+                    Point3Df pt;
+                    lineHandler >> trash;
+                    for(auto i = 0; i < POINTS_3D; ++i)
+                    {
+                        lineHandler >> pt.points[i];
+                    }
+                    vertices.push_back(pt);
                 }
-
-                inputDataType = static_cast<char>(inputFile.get());
+                if(currentLine.compare(0, 2, "f ")  == 0)
+                {
+                    std::vector<std::int32_t> _faces;
+                    int trashIndex;
+                    int currentIndex;
+                    lineHandler >> trash;
+                    while(lineHandler >> currentIndex >> trash >> trashIndex >> trash>>trashIndex)
+                    {
+                        --currentIndex;
+                        _faces.push_back(currentIndex);
+                    }
+                    faces.push_back(_faces);
+                }
             }
 
+            inputFile.close();
+            std::cout << "vertices count : " << vertices.size() << std::endl;
+            std::cout << "faces count : " << faces.size() << std::endl;
             return std::nullopt;
         }
 
@@ -87,6 +89,19 @@ namespace tr
         }
 
         return d_ptr->initModel(filename);
+    }
+
+    int Model::numberOfVertices() const {return d_ptr->vertices.size();}
+    int Model::numberOfFaces() const {return d_ptr->faces.size();}
+
+    Point3Df Model::vertex(const int& index) const
+    {
+        return d_ptr->vertices[index];
+    }
+
+    std::vector<int> Model::faces(const int& index) const
+    {
+        return d_ptr->faces[index];
     }
 
     bool Model::verifyDirectoryExistence(const std::string_view& imagePath)
