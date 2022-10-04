@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <tuple>
+#include <variant>
 
 #include "Logger.hpp"
 
@@ -116,9 +117,14 @@ namespace tr
                 int y0 = (v0.y+1.)*image.height()/2.;
                 int x1 = (v1.x+1.)*image.width()/2.;
                 int y1 = (v1.y+1.)*image.height()/2.;
-                drawLine(x0, y0, x1, y1, image);
+
+                if(auto result = drawLine(x0, y0, x1, y1, image); result.has_value())
+                {
+                    return result.value();
+                }
             }
         }
+
         return std::nullopt;
     }
 
