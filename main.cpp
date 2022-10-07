@@ -10,8 +10,6 @@ int main(int argc, char** argv)
     utils::logger::setup("info");
     utils::logger::infoMessage("Starting renderer...");
 
-
-
     if(argc <= 2 && argv ==nullptr)
     {
         utils::logger::setup("error");
@@ -41,13 +39,6 @@ int main(int argc, char** argv)
         return -1;
     }
 
-
-    tr::Model m;
-    m.load(argv[1]);
-
-    render->drawModel(m, *image);
-
-    storeImage->storeImage(argv[2], *image);
 
     utils::logger::infoMessage("Image sucessfully stored!");
 
